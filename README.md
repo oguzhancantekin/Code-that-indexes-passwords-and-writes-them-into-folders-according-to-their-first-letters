@@ -1,4 +1,43 @@
-# Code that creates hashes of passwords indexes them and writes them to folders according to their first letters
- My goal in this project is to hash the passwords in text files that may contain millions of passwords according to MD5, SHA1, SHA256 formats, open a folder according to the first character of each password and write the relevant password to the text file in the relevant folder. In short, this program indexes and groups passwords. Apart from these, there is also a password search section and if a password entered here is among these millions of passwords, it finds it and notifies the user, if not, it saves this newly written password to the relevant Index folder. It took a long time to finalize this code and after finalizing it and making some optimizations, a program emerged that indexed millions of passwords in about 20-30 seconds. The first working version of the program took 4-5 minutes to complete the indexing process. From this perspective, I made a good optimization. Later, I realized the mistakes I made and shortened this time by making changes to the indexing system. As a result, this project gave me good experience in file organization and working with files. Apart from these, it was also a good experience in terms of the optimization problems I fixed.
-# Şifrelerin hash'lerini oluşturan kod, bunları ilk harflerine göre indeksler ve klasörlere yazar
-Bu projedeki hedefim, milyonlarca şifre içerebilecek metin dosyalarındaki şifreleri MD5, SHA1, SHA256 formatlarına göre hash'lemek, her şifrenin ilk karakterine göre bir klasör açmak ve ilgili şifreyi ilgili klasördeki metin dosyasına yazmaktır. Kısacası, bu program şifreleri indeksler ve gruplandırır. Bunların dışında bir de şifre arama bölümü var ve buraya girilen bir şifre bu milyonlarca şifre arasındaysa onu bulup kullanıcıya bildiriyor, değilse bu yeni yazılan şifreyi ilgili İndeks klasörüne kaydediyor. Bu kodu sonlandırmak uzun zaman aldı ve sonlandırıp bazı optimizasyonlar yaptıktan sonra yaklaşık 20-30 saniyede milyonlarca şifreyi indeksleyen bir program ortaya çıktı. Programın ilk çalışan versiyonu indeksleme işlemini tamamlamak için 4-5 dakika sürdü. Bu açıdan bakıldığında iyi bir optimizasyon yaptım. Daha sonra yaptığım hataları fark ettim ve indeksleme sisteminde değişiklikler yaparak bu süreyi kısalttım. Sonuç olarak bu proje bana dosya organizasyonu ve dosyalarla çalışma konusunda iyi bir deneyim kazandırdı. Bunların dışında düzelttiğim optimizasyon sorunları açısından da iyi bir deneyim oldu.
+
+## Proje Açıklaması
+Bu proje, büyük miktarda şifre verisini işleyerek indeksleyen ve arama yapmaya olanak tanıyan bir Java uygulamasıdır. Uygulama, verilen klasörlerdeki şifreleri okuyarak işlenmiş hale getirir, şifrelerin çeşitli hash algoritmaları ile özetlerini oluşturur ve bu verileri indeksleyerek daha hızlı erişim sağlar. Ayrıca, belirli bir şifrenin indekslenmiş veriler içinde olup olmadığını arayabilir ve bulunamayan şifreleri indekse ekleyebilir.
+
+## Kullanılan Teknolojiler ve Öğrenilen Konular
+Bu proje kapsamında aşağıdaki Java yapıları ve kavramları aktif olarak kullanılmış ve pekiştirilmiştir:
+### 1. **Dosya İşlemleri (File I/O)**
+- `File`, `FileReader`, `FileWriter`, `BufferedReader`, `BufferedWriter` gibi sınıflar kullanılarak dosya okuma, yazma ve silme işlemleri gerçekleştirilmiştir.
+- Unprocessed klasöründeki şifreler okunarak işlenmiş şifreler başka bir dosyada saklanmıştır.
+- Dosya içeriklerinin temizlenmesi işlemi gerçekleştirilmiştir.
+### 2. **Hashleme Algoritmaları (Message Digest)**
+- `MessageDigest` sınıfı ile **MD5, SHA-1 ve SHA-256** hash fonksiyonları kullanılarak her şifrenin güvenli özetleri oluşturulmuştur.
+- Güvenli depolama için hash fonksiyonlarının nasıl çalıştığı incelenmiş ve uygulanmıştır.
+### 3. **Veri Yapıları ve Koleksiyonlar**
+- **Set (HashSet)**: Daha önce işlenmiş şifreleri saklamak ve tekrar edenleri önlemek için kullanılmıştır.
+- **Map (HashMap)**: Farklı harf gruplarına göre dosyaları yönetmek amacıyla kullanılmıştır.
+### 4. **Dizin (Index) Yapısı**
+- Şifreleri ilk harflerine göre dizinleyerek indeksleme mantığı oluşturulmuştur.
+- Büyük harfler ve özel karakterler için özel klasörler kullanılarak düzenli bir dosya yapısı oluşturulmuştur.
+### 5. **Kullanıcı Girişi ve Menü Yönetimi**
+- `Scanner` kullanılarak kullanıcıdan giriş alınmış, uygun işlemler başlatılmıştır.
+- Kullanıcı, şifreleri işleyebilir, belirli bir şifreyi arayabilir veya çıkış yapabilir.
+### 6. **Exception Handling (Hata Yönetimi)**
+- **`try-catch-finally`** blokları ile dosya işlemlerinde oluşabilecek hatalar yakalanmış ve uygun hata mesajları döndürülmüştür.
+- Örneğin, eksik dosyalar veya yanlış indeks klasörleri gibi durumlar için hata kontrolleri eklenmiştir.
+
+## Proje Yapısı
+```plaintext
+File_Project/
+│── Unprocessed-Passwords/   # İşlenmemiş şifrelerin bulunduğu klasör
+│── Processed/               # İşlenmiş şifrelerin kaydedildiği klasör
+│   └── Processed.txt        # Tüm işlenmiş şifrelerin saklandığı dosya
+│── Index/                   # Şifrelerin indekslendiği klasör
+│   ├── a/                   # 'a' harfiyle başlayan şifreler burada saklanır
+│   ├── b/                   # 'b' harfiyle başlayan şifreler burada saklanır
+│   ├── Buyuk_harfler/       # Büyük harfle başlayan şifreler burada saklanır
+│   │   ├── A/               # 'A' harfiyle başlayan şifreler burada saklanır
+│   │   ├── B/               # 'B' harfiyle başlayan şifreler burada saklanır
+│   └── tanimsiz/            # Özel karakterle başlayan şifreler burada saklanır
+└── PasswordProcessor.java    # Uygulamanın ana Java dosyası
+```
+## Sonuç
+Bu proje, Java ile dosya işlemleri, veri yapıları, hashing algoritmaları ve indeksleme mantığı gibi birçok önemli yazılım geliştirme konseptini pekiştirmek için geliştirilmiştir. Gerçek dünya senaryolarında büyük veri kümelerinin işlenmesi, güvenli veri saklama ve hızlı erişim için indeksleme teknikleri gibi kavramları uygulamaya koyarak daha derin bir anlayış kazanılmıştır.
